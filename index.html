@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amrutham — Chat with us</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --maroon: #6B4423;
+    --maroon-deep: #4A2C17;
+    --gold: #C9973B;
+    --gold-light: #E8C468;
+    --gold-soft: #EFD79A;
+    --cream: #FBF3E1;
+    --cream-warm: #F3E4BC;
+    --cardamom: #6B7B4F;
+    --charcoal: #3A2415;
+    --brass-line: rgba(201,151,59,0.4);
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0; padding:0; height:100%;
+    background: var(--cream);
+    font-family:'Work Sans', sans-serif;
+    color: var(--charcoal);
+  }
+
+  body{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding: 24px;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(200,154,59,0.10), transparent 40%),
+      radial-gradient(circle at 90% 85%, rgba(92,26,36,0.08), transparent 45%),
+      var(--cream);
+  }
+
+  .app{
+    width:100%;
+    max-width: 460px;
+    height: 88vh;
+    max-height: 780px;
+    background: var(--cream);
+    border-radius: 18px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    box-shadow: 0 30px 60px -20px rgba(62,15,23,0.35), 0 0 0 1px rgba(92,26,36,0.06);
+    position:relative;
+  }
+
+  /* ---------- Header: brass nameplate ---------- */
+  .header{
+    background: linear-gradient(160deg, #EFD79A 0%, #D9AE55 55%, #B5822F 100%);
+    color: var(--maroon-deep);
+    padding: 22px 26px 18px;
+    position:relative;
+    flex-shrink:0;
+  }
+
+  .header::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:6px;
+    background: repeating-linear-gradient(90deg,
+      var(--maroon-deep) 0 14px, transparent 14px 22px);
+    opacity:0.55;
+  }
+
+  .brand-row{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+
+  .logo-mark{
+    width:50px; height:50px;
+    flex-shrink:0;
+    border-radius:50%;
+    overflow:hidden;
+    box-shadow: 0 2px 10px rgba(74,44,23,0.35), 0 0 0 2px rgba(251,243,225,0.6);
+  }
+  .logo-mark img{
+    width:100%; height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .brand-text h1{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size: 23px;
+    letter-spacing: 0.6px;
+    margin:0;
+    line-height:1.1;
+    color: var(--maroon-deep);
+  }
+  .brand-text p{
+    margin: 4px 0 0;
+    font-size: 11.5px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: rgba(74,44,23,0.72);
+    font-weight:500;
+  }
+
+  .status{
+    margin-top: 13px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-size: 12px;
+    color: rgba(74,44,23,0.65);
+  }
+  .status .dot{
+    width:7px; height:7px; border-radius:50%;
+    background: #4F6B3A;
+    box-shadow: 0 0 0 3px rgba(79,107,58,0.18);
+  }
+
+  /* ---------- Messages ---------- */
+  .messages{
+    flex:1;
+    overflow-y:auto;
+    padding: 22px 20px;
+    display:flex;
+    flex-direction:column;
+    gap: 14px;
+    background:
+      linear-gradient(var(--cream), var(--cream));
+  }
+
+  .messages::-webkit-scrollbar{ width:6px; }
+  .messages::-webkit-scrollbar-thumb{ background: var(--brass-line); border-radius:10px; }
+
+  .row{ display:flex; }
+  .row.bot{ justify-content:flex-start; }
+  .row.user{ justify-content:flex-end; }
+
+  .bubble{
+    max-width: 80%;
+    padding: 11px 15px;
+    font-size: 14.5px;
+    line-height:1.5;
+    position:relative;
+  }
+
+  .bubble.bot{
+    background: #fff;
+    border: 1px solid var(--brass-line);
+    color: var(--charcoal);
+    border-radius: 3px 14px 14px 14px;
+    box-shadow: 0 2px 8px rgba(62,15,23,0.05);
+  }
+
+  .bubble.user{
+    background: linear-gradient(135deg, #C9973B, #A97A2E);
+    color: #FBF3E1;
+    border-radius: 14px 3px 14px 14px;
+  }
+
+  .welcome{
+    text-align:center;
+    padding: 10px 10px 4px;
+    color: rgba(42,26,21,0.55);
+    font-size: 13px;
+  }
+  .welcome .rule{
+    width:36px; height:1px; background:var(--brass-line);
+    margin: 12px auto;
+  }
+
+  .typing{
+    display:flex; gap:4px; align-items:center; padding: 4px 2px;
+  }
+  .typing span{
+    width:6px; height:6px; border-radius:50%;
+    background: var(--maroon);
+    opacity:0.35;
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2){ animation-delay:0.15s; }
+  .typing span:nth-child(3){ animation-delay:0.3s; }
+  @keyframes bounce{
+    0%,60%,100%{ transform: translateY(0); opacity:0.35;}
+    30%{ transform: translateY(-4px); opacity:0.9;}
+  }
+
+  /* ---------- Input ---------- */
+  .inputbar{
+    flex-shrink:0;
+    padding: 14px 16px;
+    background: var(--cream-warm);
+    border-top: 1px solid var(--brass-line);
+    display:flex;
+    gap:10px;
+    align-items:flex-end;
+  }
+
+  .inputbar textarea{
+    flex:1;
+    resize:none;
+    border: 1px solid rgba(92,26,36,0.18);
+    background: #fff;
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-family:'Work Sans', sans-serif;
+    font-size: 14.5px;
+    color: var(--charcoal);
+    max-height: 90px;
+    line-height:1.4;
+  }
+  .inputbar textarea:focus{
+    outline: 2px solid var(--gold);
+    outline-offset: 1px;
+    border-color: transparent;
+  }
+  .inputbar textarea::placeholder{ color:#9c8779; }
+
+  .send{
+    width:42px; height:42px;
+    border-radius: 50%;
+    border:none;
+    background: linear-gradient(150deg, #C9973B, #8B5A2B);
+    color: #FBF3E1;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  .send:hover{ filter: brightness(1.08); }
+  .send:active{ transform: scale(0.94); }
+  .send:disabled{ opacity:0.45; cursor:default; }
+  .send svg{ width:18px; height:18px; }
+
+  .hint{
+    text-align:center;
+    font-size:11px;
+    color: rgba(42,26,21,0.4);
+    padding: 6px 0 14px;
+    background: var(--cream-warm);
+  }
+
+  @media (max-width: 520px){
+    body{ padding:0; }
+    .app{ max-width:100%; height:100vh; max-height:none; border-radius:0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .flame{ animation:none; }
+    .typing span{ animation:none; opacity:0.6; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <div class="brand-row">
+      <div class="logo-mark">
+        <img src="AmruthamLogo.png" alt="Amrutham logo">
+      </div>
+      <div class="brand-text">
+        <h1>Amrutham</h1>
+        <p>The Nectar of Indian Cuisine</p>
+      </div>
+    </div>
+    <div class="status"><span class="dot"></span> Usually replies in a few seconds</div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="welcome">
+      Namaste 🙏 — ask about our menu, hours, location, or place an order.
+      <div class="rule"></div>
+    </div>
+    <div class="row bot">
+      <div class="bubble bot">Welcome to Amrutham! How can I help you today — table booking, menu questions, or an order?</div>
+    </div>
+  </div>
+
+  <div class="inputbar">
+    <textarea id="input" rows="1" placeholder="Type your message…"></textarea>
+    <button class="send" id="sendBtn" aria-label="Send message">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13"></line>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+      </svg>
+    </button>
+  </div>
+  <div class="hint">Amrutham AI Assistant · responses may not always be exact</div>
+</div>
+
+<script>
+  // === CONFIG: replace with your n8n production webhook URL ===
+  const WEBHOOK_URL = "https://YOUR-N8N-DOMAIN/webhook/amrutham-chat";
+
+  const sessionId = "web-" + Math.random().toString(36).slice(2) + Date.now();
+
+  const messagesEl = document.getElementById('messages');
+  const inputEl = document.getElementById('input');
+  const sendBtn = document.getElementById('sendBtn');
+
+  function addBubble(text, who){
+    const row = document.createElement('div');
+    row.className = 'row ' + who;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble ' + who;
+    bubble.textContent = text;
+    row.appendChild(bubble);
+    messagesEl.appendChild(row);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return row;
+  }
+
+  function addTyping(){
+    const row = document.createElement('div');
+    row.className = 'row bot';
+    row.id = 'typingRow';
+    row.innerHTML = '<div class="bubble bot"><div class="typing"><span></span><span></span><span></span></div></div>';
+    messagesEl.appendChild(row);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function removeTyping(){
+    const row = document.getElementById('typingRow');
+    if(row) row.remove();
+  }
+
+  async function sendMessage(){
+    const text = inputEl.value.trim();
+    if(!text) return;
+
+    addBubble(text, 'user');
+    inputEl.value = '';
+    inputEl.style.height = 'auto';
+    sendBtn.disabled = true;
+    addTyping();
+
+    try{
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'sendMessage',
+          sessionId: sessionId,
+          chatInput: text
+        })
+      });
+
+      if(!res.ok) throw new Error('Request failed: ' + res.status);
+      const data = await res.json();
+      const reply = data.output || data.text || data.reply || "I'm sorry, something went wrong. Please contact Amrutham directly.";
+
+      removeTyping();
+      addBubble(reply, 'bot');
+    }catch(err){
+      removeTyping();
+      addBubble("I'm having trouble connecting right now. Please try again in a moment.", 'bot');
+      console.error(err);
+    }finally{
+      sendBtn.disabled = false;
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  inputEl.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+  inputEl.addEventListener('input', () => {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 90) + 'px';
+  });
+</script>
+
+</body>
+</html>
